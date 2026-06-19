@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report Service API Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
+    --green: #059669;
+    --green-bg: #ecfdf5;
+    --orange: #d97706;
+    --orange-bg: #fffbeb;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --purple: #7c3aed;
+    --purple-bg: #f5f3ff;
+    --code-bg: #1e1e2e;
+    --code-text: #cdd6f4;
+    --code-key: #89b4fa;
+    --code-string: #a6e3a1;
+    --code-number: #fab387;
+    --code-comment: #6c7086;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+    padding: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+
+  .toc {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-bottom: 48px;
+  }
+
+  .toc h2 {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .toc-section {
+    margin-bottom: 12px;
+  }
+
+  .toc-section-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .toc a {
+    display: inline-block;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 2px 0;
+  }
+
+  .toc a:hover { text-decoration: underline; }
+
+  .endpoint {
+    margin-bottom: 56px;
+    page-break-inside: avoid;
+  }
+
+  .endpoint-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .endpoint-number {
+    background: var(--accent);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .endpoint-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+
+  .endpoint-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    padding-left: 40px;
+  }
+
+  .route-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-left: 40px;
+  }
+
+  .method {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .method-get { background: var(--green-bg); color: var(--green); }
+  .method-post { background: var(--accent-light); color: var(--accent); }
+  .method-put { background: var(--orange-bg); color: var(--orange); }
+  .method-delete { background: var(--red-bg); color: var(--red); }
+
+  .route-path {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .role-badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--purple-bg);
+    color: var(--purple);
+    font-weight: 500;
+  }
+
+  .section-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 8px;
+    margin-top: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin-bottom: 16px;
+  }
+
+  th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  td code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .required {
+    color: var(--red);
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .optional {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  pre {
+    background: var(--code-bg);
+    border-radius: 10px;
+    padding: 20px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  pre .label {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #585b70;
+  }
+
+  pre code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--code-text);
+  }
+
+  .json-key { color: var(--code-key); }
+  .json-string { color: var(--code-string); }
+  .json-number { color: var(--code-number); }
+  .json-bool { color: var(--code-number); }
+  .json-null { color: var(--code-comment); }
+
+  .errors-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .errors-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 0;
+    font-size: 0.88rem;
+  }
+
+  .error-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .error-4xx { background: var(--orange-bg); color: var(--orange); }
+  .error-5xx { background: var(--red-bg); color: var(--red); }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  .info-box {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.88rem;
+    margin: 16px 0;
+    color: var(--text);
+  }
+
+  @media print {
+    body { padding: 20px; }
+    .endpoint { page-break-inside: avoid; }
+    pre { font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Report Service API Reference</h1>
+<p class="subtitle">v1.0 MVP &mdash; 15 endpoints &mdash; FastAPI + PostgreSQL &mdash; 2026-04-27</p>
+
+<div class="toc">
+  <h2>Contents</h2>
+  <div class="toc-section">
+    <div class="toc-section-title">Authentication</div>
+    <a href="#ep1">1. Login</a> &nbsp;&middot;&nbsp;
+    <a href="#ep2">2. Current User</a>
+  </div>
+  <div class="toc-section">
+    <div class="toc-section-title">Reports (Public)</div>
+    <a href="#ep3">3. List Reports</a> &nbsp;&middot;&nbsp;
+    <a href="#ep4">4. Execute Report</a>
+  </div>
+  <div class="toc-section">
+    <div class="toc-section-title">Admin: Reports</div>
+    <a href="#ep5">5. Analyze SQL</a> &nbsp;&middot;&nbsp;
+    <a href="#ep6">6. Get Report</a> &nbsp;&middot;&nbsp;
+    <a href="#ep7">7. Create Report</a> &nbsp;&middot;&nbsp;
+    <a href="#ep8">8. Update Report</a> &nbsp;&middot;&nbsp;
+    <a href="#ep9">9. Delete Report</a> &nbsp;&middot;&nbsp;
+    <a href="#ep10">10. Test Report</a>
+  </div>
+  <div class="toc-section">
+    <div class="toc-section-title">Admin: Datasources</div>
+    <a href="#ep11">11. List Datasources</a> &nbsp;&middot;&nbsp;
+    <a href="#ep12">12. Create Datasource</a> &nbsp;&middot;&nbsp;
+    <a href="#ep13">13. Update Datasource</a> &nbsp;&middot;&nbsp;
+    <a href="#ep14">14. Delete Datasource</a> &nbsp;&middot;&nbsp;
+    <a href="#ep15">15. Test Connection</a>
+  </div>
+</div>
+
+<div class="info-box">
+  All endpoints except <code>/auth/login</code> and <code>/health</code> require the header:<br>
+  <code>Authorization: Bearer &lt;token&gt;</code>
+</div>
+
+<!-- ============================== EP 1 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep1">
+  <div class="endpoint-header">
+    <div class="endpoint-number">1</div>
+    <div class="endpoint-title">Login</div>
+  </div>
+  <p class="endpoint-desc">Authenticate user and receive a JWT token.</p>
+  <div class="route-block">
+    <span class="method method-post">POST</span>
+    <span class="route-path">/api/v1/auth/login</span>
+    <span class="role-badge">public</span>
+  </div>
+
+  <div class="section-label">Request Body</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>username</code></td><td>string</td><td class="required">yes</td><td>Username</td></tr>
+    <tr><td><code>password</code></td><td>string</td><td class="required">yes</td><td>Password</td></tr>
+  </table>
+
+  <div class="section-label">Response (200)</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>access_token</code></td><td>string</td><td>JWT token</td></tr>
+    <tr><td><code>token_type</code></td><td>string</td><td>Always <code>bearer</code></td></tr>
+    <tr><td><code>expires_in</code></td><td>integer</td><td>Token lifetime in seconds</td></tr>
+    <tr><td><code>user</code></td><td>object</td><td><code>id</code>, <code>username</code>, <code>role</code></td></tr>
+  </table>
+
+  <div class="section-label">Request Example</div>
+  <pre><span class="label">Request</span><code>{
+  <span class="json-key">"username"</span>: <span class="json-string">"admin"</span>,
+  <span class="json-key">"password"</span>: <span class="json-string">"admin"</span>
+}</code></pre>
+
+  <div class="section-label">Response Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"access_token"</span>: <span class="json-string">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</span>,
+  <span class="json-key">"token_type"</span>: <span class="json-string">"bearer"</span>,
+  <span class="json-key">"expires_in"</span>: <span class="json-number">86400</span>,
+  <span class="json-key">"user"</span>: {
+    <span class="json-key">"id"</span>: <span class="json-string">"1dd842e8-87e7-4569-8a2e-d029e06a083c"</span>,
+    <span class="json-key">"username"</span>: <span class="json-string">"admin"</span>,
+    <span class="json-key">"role"</span>: <span class="json-string">"admin"</span>
+  }
+}</code></pre>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">401</span> Invalid credentials</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 2 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep2">
+  <div class="endpoint-header">
+    <div class="endpoint-number">2</div>
+    <div class="endpoint-title">Current User</div>
+  </div>
+  <p class="endpoint-desc">Get current authenticated user info.</p>
+  <div class="route-block">
+    <span class="method method-get">GET</span>
+    <span class="route-path">/api/v1/auth/me</span>
+    <span class="role-badge">auth</span>
+  </div>
+
+  <div class="section-label">Response (200)</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>id</code></td><td>UUID</td><td>User ID</td></tr>
+    <tr><td><code>username</code></td><td>string</td><td>Username</td></tr>
+    <tr><td><code>role</code></td><td>string</td><td><code>admin</code> or <code>viewer</code></td></tr>
+  </table>
+
+  <div class="section-label">Response Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"id"</span>: <span class="json-string">"1dd842e8-87e7-4569-8a2e-d029e06a083c"</span>,
+  <span class="json-key">"username"</span>: <span class="json-string">"admin"</span>,
+  <span class="json-key">"role"</span>: <span class="json-string">"admin"</span>
+}</code></pre>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">401</span> Invalid or missing token</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 3 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep3">
+  <div class="endpoint-header">
+    <div class="endpoint-number">3</div>
+    <div class="endpoint-title">List Reports</div>
+  </div>
+  <p class="endpoint-desc">Get list of active reports (for building menu). Returns filter definitions so the client can build filter forms dynamically.</p>
+  <div class="route-block">
+    <span class="method method-get">GET</span>
+    <span class="route-path">/api/v1/reports</span>
+    <span class="role-badge">viewer+</span>
+  </div>
+
+  <div class="section-label">Query Parameters</div>
+  <table>
+    <tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>group</code></td><td>string</td><td class="optional">no</td><td>Filter by report group</td></tr>
+  </table>
+
+  <div class="section-label">Response (200)</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>reports[].id</code></td><td>UUID</td><td>Report ID</td></tr>
+    <tr><td><code>reports[].slug</code></td><td>string</td><td>URL-friendly identifier</td></tr>
+    <tr><td><code>reports[].name</code></td><td>string</td><td>Display name</td></tr>
+    <tr><td><code>reports[].description</code></td><td>string?</td><td>Description</td></tr>
+    <tr><td><code>reports[].group</code></td><td>string?</td><td>Group for menu</td></tr>
+    <tr><td><code>reports[].type</code></td><td>string</td><td><code>table</code> | <code>bar_chart</code> | <code>pie_chart</code> | <code>scatter_plot</code></td></tr>
+    <tr><td><code>reports[].filters[]</code></td><td>array</td><td>Filter definitions (<code>name</code>, <code>type</code>, <code>label</code>, <code>required</code>)</td></tr>
+  </table>
+
+  <div class="section-label">Response Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"reports"</span>: [
+    {
+      <span class="json-key">"id"</span>: <span class="json-string">"b6680d71-4afc-4937-9148-50f9f319f736"</span>,
+      <span class="json-key">"slug"</span>: <span class="json-string">"scoring-by-day"</span>,
+      <span class="json-key">"name"</span>: <span class="json-string">"Скоринг по дням"</span>,
+      <span class="json-key">"description"</span>: <span class="json-string">"Уникальные клиенты, прошедшие INITIAL_SCORING"</span>,
+      <span class="json-key">"group"</span>: <span class="json-string">"dashboard"</span>,
+      <span class="json-key">"type"</span>: <span class="json-string">"bar_chart"</span>,
+      <span class="json-key">"filters"</span>: [
+        { <span class="json-key">"name"</span>: <span class="json-string">"date_from"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата с"</span>, <span class="json-key">"required"</span>: <span class="json-bool">true</span> },
+        { <span class="json-key">"name"</span>: <span class="json-string">"date_to"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата по"</span>, <span class="json-key">"required"</span>: <span class="json-bool">true</span> },
+        { <span class="json-key">"name"</span>: <span class="json-string">"scoring_type"</span>, <span class="json-key">"type"</span>: <span class="json-string">"string"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Тип скоринга"</span>, <span class="json-key">"required"</span>: <span class="json-bool">true</span> }
+      ]
+    }
+  ]
+}</code></pre>
+</div>
+
+<!-- ============================== EP 4 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep4">
+  <div class="endpoint-header">
+    <div class="endpoint-number">4</div>
+    <div class="endpoint-title">Execute Report</div>
+  </div>
+  <p class="endpoint-desc">Execute report SQL and return data in unified JSON format. The main method of the service. Accepts report ID (UUID) or slug.</p>
+  <div class="route-block">
+    <span class="method method-post">POST</span>
+    <span class="route-path">/api/v1/reports/{report_id}/data</span>
+    <span class="role-badge">viewer+</span>
+  </div>
+
+  <div class="section-label">Path Parameters</div>
+  <table>
+    <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>report_id</code></td><td>UUID or string</td><td>Report UUID or slug</td></tr>
+  </table>
+
+  <div class="section-label">Request Body</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>date_from</code></td><td>date</td><td class="required">yes</td><td>Period start (YYYY-MM-DD)</td></tr>
+    <tr><td><code>date_to</code></td><td>date</td><td class="required">yes</td><td>Period end (YYYY-MM-DD)</td></tr>
+    <tr><td><code>filters</code></td><td>object</td><td class="optional">no</td><td>Additional filters as key-value pairs</td></tr>
+  </table>
+
+  <div class="section-label">Response (200) &mdash; Unified Format</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>report_id</code></td><td>UUID</td><td>Report ID</td></tr>
+    <tr><td><code>slug</code></td><td>string</td><td>Report slug</td></tr>
+    <tr><td><code>title</code></td><td>string</td><td>Report name</td></tr>
+    <tr><td><code>type</code></td><td>string</td><td>Visualization type</td></tr>
+    <tr><td><code>columns[]</code></td><td>array</td><td>Column definitions: <code>key</code>, <code>label</code>, <code>type</code></td></tr>
+    <tr><td><code>data[]</code></td><td>array</td><td>Data rows (keys match <code>columns[].key</code>)</td></tr>
+    <tr><td><code>totals</code></td><td>object?</td><td>Aggregated totals (optional)</td></tr>
+    <tr><td><code>meta</code></td><td>object</td><td><code>generated_at</code>, <code>execution_time_ms</code>, <code>total_rows</code>, <code>filters_applied</code></td></tr>
+  </table>
+
+  <div class="section-label">Request Example</div>
+  <pre><span class="label">Request</span><code>{
+  <span class="json-key">"date_from"</span>: <span class="json-string">"2026-04-01"</span>,
+  <span class="json-key">"date_to"</span>: <span class="json-string">"2026-04-27"</span>,
+  <span class="json-key">"filters"</span>: {
+    <span class="json-key">"scoring_type"</span>: <span class="json-string">"INITIAL_SCORING"</span>
+  }
+}</code></pre>
+
+  <div class="section-label">Response Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"report_id"</span>: <span class="json-string">"b6680d71-4afc-4937-9148-50f9f319f736"</span>,
+  <span class="json-key">"slug"</span>: <span class="json-string">"scoring-by-day"</span>,
+  <span class="json-key">"title"</span>: <span class="json-string">"Скоринг по дням"</span>,
+  <span class="json-key">"type"</span>: <span class="json-string">"bar_chart"</span>,
+  <span class="json-key">"columns"</span>: [
+    { <span class="json-key">"key"</span>: <span class="json-string">"d"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span> },
+    { <span class="json-key">"key"</span>: <span class="json-string">"c"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Уникальных клиентов"</span>, <span class="json-key">"type"</span>: <span class="json-string">"number"</span> }
+  ],
+  <span class="json-key">"data"</span>: [
+    { <span class="json-key">"d"</span>: <span class="json-string">"2026-04-01"</span>, <span class="json-key">"c"</span>: <span class="json-number">5</span> },
+    { <span class="json-key">"d"</span>: <span class="json-string">"2026-04-02"</span>, <span class="json-key">"c"</span>: <span class="json-number">9</span> },
+    { <span class="json-key">"d"</span>: <span class="json-string">"2026-04-03"</span>, <span class="json-key">"c"</span>: <span class="json-number">15</span> },
+    { <span class="json-key">"d"</span>: <span class="json-string">"2026-04-04"</span>, <span class="json-key">"c"</span>: <span class="json-number">8</span> },
+    { <span class="json-key">"d"</span>: <span class="json-string">"2026-04-05"</span>, <span class="json-key">"c"</span>: <span class="json-number">22</span> }
+  ],
+  <span class="json-key">"totals"</span>: <span class="json-null">null</span>,
+  <span class="json-key">"meta"</span>: {
+    <span class="json-key">"generated_at"</span>: <span class="json-string">"2026-04-27T16:14:14.249537+00:00"</span>,
+    <span class="json-key">"execution_time_ms"</span>: <span class="json-number">1</span>,
+    <span class="json-key">"total_rows"</span>: <span class="json-number">26</span>,
+    <span class="json-key">"filters_applied"</span>: {
+      <span class="json-key">"date_from"</span>: <span class="json-string">"2026-04-01"</span>,
+      <span class="json-key">"date_to"</span>: <span class="json-string">"2026-04-27"</span>,
+      <span class="json-key">"scoring_type"</span>: <span class="json-string">"INITIAL_SCORING"</span>
+    }
+  }
+}</code></pre>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">400</span> Invalid filters (date_from > date_to, range exceeds max_range_days)</li>
+    <li><span class="error-code error-4xx">404</span> Report not found or inactive</li>
+    <li><span class="error-code error-5xx">504</span> SQL execution timeout (&gt;30s)</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 5 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep5">
+  <div class="endpoint-header">
+    <div class="endpoint-number">5</div>
+    <div class="endpoint-title">Analyze SQL</div>
+  </div>
+  <p class="endpoint-desc">Auto-detect column definitions from SQL query. Executes with LIMIT 0, reads PostgreSQL column metadata (name, type), and maps to Report Service types.</p>
+  <div class="route-block">
+    <span class="method method-post">POST</span>
+    <span class="route-path">/api/v1/admin/reports/analyze-sql</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Request Body</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>datasource_id</code></td><td>UUID</td><td class="required">yes</td><td>Target datasource</td></tr>
+    <tr><td><code>sql_query</code></td><td>string</td><td class="required">yes</td><td>SQL query to analyze</td></tr>
+  </table>
+
+  <div class="section-label">Response (200)</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>columns[].key</code></td><td>string</td><td>Column name from SQL</td></tr>
+    <tr><td><code>columns[].label</code></td><td>string</td><td>Auto-generated label (title case)</td></tr>
+    <tr><td><code>columns[].type</code></td><td>string</td><td>Detected type: <code>string</code> | <code>number</code> | <code>date</code> | <code>datetime</code> | <code>boolean</code></td></tr>
+  </table>
+
+  <div class="section-label">Request Example</div>
+  <pre><span class="label">Request</span><code>{
+  <span class="json-key">"datasource_id"</span>: <span class="json-string">"f76d6370-b34e-4f6c-9dbb-92efd6858ba6"</span>,
+  <span class="json-key">"sql_query"</span>: <span class="json-string">"SELECT DATE(created_at) d, COUNT(DISTINCT client_id) c FROM client_scoring_results WHERE scoring_type = :scoring_type AND created_at BETWEEN :date_from AND :date_to GROUP BY DATE(created_at) ORDER BY d"</span>
+}</code></pre>
+
+  <div class="section-label">Response Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"columns"</span>: [
+    { <span class="json-key">"key"</span>: <span class="json-string">"d"</span>, <span class="json-key">"label"</span>: <span class="json-string">"D"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span> },
+    { <span class="json-key">"key"</span>: <span class="json-string">"c"</span>, <span class="json-key">"label"</span>: <span class="json-string">"C"</span>, <span class="json-key">"type"</span>: <span class="json-string">"number"</span> }
+  ]
+}</code></pre>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">400</span> Invalid SQL or datasource connection error</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 6 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep6">
+  <div class="endpoint-header">
+    <div class="endpoint-number">6</div>
+    <div class="endpoint-title">Get Report (Admin)</div>
+  </div>
+  <p class="endpoint-desc">Full report details including SQL query and config. Not exposed to viewers.</p>
+  <div class="route-block">
+    <span class="method method-get">GET</span>
+    <span class="route-path">/api/v1/admin/reports/{report_id}</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Response (200)</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>id</code></td><td>UUID</td><td>Report ID</td></tr>
+    <tr><td><code>slug</code></td><td>string</td><td>URL slug</td></tr>
+    <tr><td><code>name</code></td><td>string</td><td>Display name</td></tr>
+    <tr><td><code>description</code></td><td>string?</td><td>Description</td></tr>
+    <tr><td><code>group</code></td><td>string?</td><td>Menu group</td></tr>
+    <tr><td><code>type</code></td><td>string</td><td>Visualization type</td></tr>
+    <tr><td><code>datasource_id</code></td><td>UUID</td><td>Linked datasource</td></tr>
+    <tr><td><code>sql_query</code></td><td>string</td><td>SQL query text</td></tr>
+    <tr><td><code>config</code></td><td>object</td><td>Columns, filters, max_range_days</td></tr>
+    <tr><td><code>is_active</code></td><td>boolean</td><td>Active status</td></tr>
+    <tr><td><code>created_at</code></td><td>datetime</td><td>Creation timestamp</td></tr>
+    <tr><td><code>updated_at</code></td><td>datetime</td><td>Last update timestamp</td></tr>
+  </table>
+
+  <div class="section-label">Response Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"id"</span>: <span class="json-string">"b6680d71-4afc-4937-9148-50f9f319f736"</span>,
+  <span class="json-key">"slug"</span>: <span class="json-string">"scoring-by-day"</span>,
+  <span class="json-key">"name"</span>: <span class="json-string">"Скоринг по дням"</span>,
+  <span class="json-key">"description"</span>: <span class="json-string">"Уникальные клиенты, прошедшие INITIAL_SCORING"</span>,
+  <span class="json-key">"group"</span>: <span class="json-string">"dashboard"</span>,
+  <span class="json-key">"type"</span>: <span class="json-string">"bar_chart"</span>,
+  <span class="json-key">"datasource_id"</span>: <span class="json-string">"f76d6370-b34e-4f6c-9dbb-92efd6858ba6"</span>,
+  <span class="json-key">"sql_query"</span>: <span class="json-string">"SELECT DATE(created_at) d, COUNT(DISTINCT client_id) c FROM client_scoring_results WHERE scoring_type = :scoring_type AND created_at BETWEEN :date_from AND :date_to GROUP BY DATE(created_at) ORDER BY d"</span>,
+  <span class="json-key">"config"</span>: {
+    <span class="json-key">"columns"</span>: [
+      { <span class="json-key">"key"</span>: <span class="json-string">"d"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата"</span> },
+      { <span class="json-key">"key"</span>: <span class="json-string">"c"</span>, <span class="json-key">"type"</span>: <span class="json-string">"number"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Уникальных клиентов"</span> }
+    ],
+    <span class="json-key">"filters"</span>: [
+      { <span class="json-key">"name"</span>: <span class="json-string">"date_from"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span>, <span class="json-key">"required"</span>: <span class="json-bool">true</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата с"</span> },
+      { <span class="json-key">"name"</span>: <span class="json-string">"date_to"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span>, <span class="json-key">"required"</span>: <span class="json-bool">true</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата по"</span> },
+      { <span class="json-key">"name"</span>: <span class="json-string">"scoring_type"</span>, <span class="json-key">"type"</span>: <span class="json-string">"string"</span>, <span class="json-key">"required"</span>: <span class="json-bool">true</span>, <span class="json-key">"label"</span>: <span class="json-string">"Тип скоринга"</span> }
+    ],
+    <span class="json-key">"max_range_days"</span>: <span class="json-number">90</span>
+  },
+  <span class="json-key">"is_active"</span>: <span class="json-bool">true</span>,
+  <span class="json-key">"created_at"</span>: <span class="json-string">"2026-04-27T16:13:48.944409Z"</span>,
+  <span class="json-key">"updated_at"</span>: <span class="json-string">"2026-04-27T16:13:56.996278Z"</span>
+}</code></pre>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">404</span> Report not found</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 7 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep7">
+  <div class="endpoint-header">
+    <div class="endpoint-number">7</div>
+    <div class="endpoint-title">Create Report</div>
+  </div>
+  <p class="endpoint-desc">Create a new report. If <code>config.columns</code> is empty or missing, columns are auto-generated from SQL metadata.</p>
+  <div class="route-block">
+    <span class="method method-post">POST</span>
+    <span class="route-path">/api/v1/admin/reports</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Request Body</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>slug</code></td><td>string</td><td class="required">yes</td><td>Unique URL slug</td></tr>
+    <tr><td><code>name</code></td><td>string</td><td class="required">yes</td><td>Display name</td></tr>
+    <tr><td><code>description</code></td><td>string</td><td class="optional">no</td><td>Description</td></tr>
+    <tr><td><code>group</code></td><td>string</td><td class="optional">no</td><td>Menu group</td></tr>
+    <tr><td><code>type</code></td><td>string</td><td class="optional">no</td><td><code>table</code> (default) | <code>bar_chart</code> | <code>pie_chart</code> | <code>scatter_plot</code></td></tr>
+    <tr><td><code>datasource_id</code></td><td>UUID</td><td class="required">yes</td><td>Target datasource</td></tr>
+    <tr><td><code>sql_query</code></td><td>string</td><td class="required">yes</td><td>SQL with <code>:param</code> placeholders</td></tr>
+    <tr><td><code>config</code></td><td>object</td><td class="optional">no</td><td><code>filters</code>, <code>columns</code> (auto if empty), <code>max_range_days</code></td></tr>
+  </table>
+
+  <div class="section-label">Request Example</div>
+  <pre><span class="label">Request</span><code>{
+  <span class="json-key">"slug"</span>: <span class="json-string">"scoring-by-day"</span>,
+  <span class="json-key">"name"</span>: <span class="json-string">"Скоринг по дням"</span>,
+  <span class="json-key">"description"</span>: <span class="json-string">"Уникальные клиенты, прошедшие INITIAL_SCORING"</span>,
+  <span class="json-key">"group"</span>: <span class="json-string">"dashboard"</span>,
+  <span class="json-key">"type"</span>: <span class="json-string">"bar_chart"</span>,
+  <span class="json-key">"datasource_id"</span>: <span class="json-string">"f76d6370-b34e-4f6c-9dbb-92efd6858ba6"</span>,
+  <span class="json-key">"sql_query"</span>: <span class="json-string">"SELECT DATE(created_at) d, COUNT(DISTINCT client_id) c FROM client_scoring_results WHERE scoring_type = :scoring_type AND created_at BETWEEN :date_from AND :date_to GROUP BY DATE(created_at) ORDER BY d"</span>,
+  <span class="json-key">"config"</span>: {
+    <span class="json-key">"filters"</span>: [
+      { <span class="json-key">"name"</span>: <span class="json-string">"date_from"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span>, <span class="json-key">"required"</span>: <span class="json-bool">true</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата с"</span> },
+      { <span class="json-key">"name"</span>: <span class="json-string">"date_to"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span>, <span class="json-key">"required"</span>: <span class="json-bool">true</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата по"</span> },
+      { <span class="json-key">"name"</span>: <span class="json-string">"scoring_type"</span>, <span class="json-key">"type"</span>: <span class="json-string">"string"</span>, <span class="json-key">"required"</span>: <span class="json-bool">true</span>, <span class="json-key">"label"</span>: <span class="json-string">"Тип скоринга"</span> }
+    ],
+    <span class="json-key">"max_range_days"</span>: <span class="json-number">90</span>
+  }
+}</code></pre>
+
+  <div class="info-box"><strong>Auto-generation:</strong> <code>config.columns</code> is omitted &mdash; the backend executes SQL with LIMIT 0, detects column types from PostgreSQL metadata, and fills <code>columns</code> automatically.</div>
+
+  <div class="section-label">Response: 201 Created</div>
+  <p style="font-size:0.88rem; color: var(--muted); margin-bottom: 16px;">Same structure as <a href="#ep6">Get Report (Admin)</a>. Note auto-generated columns in config.</p>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">400</span> Datasource not found</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 8 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep8">
+  <div class="endpoint-header">
+    <div class="endpoint-number">8</div>
+    <div class="endpoint-title">Update Report</div>
+  </div>
+  <p class="endpoint-desc">Partial update &mdash; send only changed fields. If <code>sql_query</code> changes and <code>columns</code> not provided, columns are auto-regenerated.</p>
+  <div class="route-block">
+    <span class="method method-put">PUT</span>
+    <span class="route-path">/api/v1/admin/reports/{report_id}</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Request Example</div>
+  <pre><span class="label">Request</span><code>{
+  <span class="json-key">"config"</span>: {
+    <span class="json-key">"columns"</span>: [
+      { <span class="json-key">"key"</span>: <span class="json-string">"d"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата"</span> },
+      { <span class="json-key">"key"</span>: <span class="json-string">"c"</span>, <span class="json-key">"type"</span>: <span class="json-string">"number"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Уникальных клиентов"</span> }
+    ],
+    <span class="json-key">"filters"</span>: [<span class="json-comment">/* ... */</span>],
+    <span class="json-key">"max_range_days"</span>: <span class="json-number">90</span>
+  }
+}</code></pre>
+
+  <div class="section-label">Response: 200 OK</div>
+  <p style="font-size:0.88rem; color: var(--muted); margin-bottom: 16px;">Full report object (same as <a href="#ep6">Get Report</a>).</p>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">400</span> Datasource not found (if datasource_id changed)</li>
+    <li><span class="error-code error-4xx">404</span> Report not found</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 9 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep9">
+  <div class="endpoint-header">
+    <div class="endpoint-number">9</div>
+    <div class="endpoint-title">Delete Report</div>
+  </div>
+  <p class="endpoint-desc">Soft delete &mdash; sets <code>is_active = false</code>. Report disappears from public list but remains in database.</p>
+  <div class="route-block">
+    <span class="method method-delete">DELETE</span>
+    <span class="route-path">/api/v1/admin/reports/{report_id}</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Response: 204 No Content</div>
+  <pre><span class="label">Response 204</span><code><span class="json-comment">// Empty body</span></code></pre>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">404</span> Report not found</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 10 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep10">
+  <div class="endpoint-header">
+    <div class="endpoint-number">10</div>
+    <div class="endpoint-title">Test Report</div>
+  </div>
+  <p class="endpoint-desc">Test SQL execution with LIMIT 10. Returns data in the same unified format with <code>test_mode: true</code> in meta.</p>
+  <div class="route-block">
+    <span class="method method-post">POST</span>
+    <span class="route-path">/api/v1/admin/reports/{report_id}/test</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Request Body</div>
+  <p style="font-size:0.88rem; color: var(--muted); margin-bottom: 12px;">Same as <a href="#ep4">Execute Report</a>: <code>date_from</code>, <code>date_to</code>, <code>filters</code>.</p>
+
+  <div class="section-label">Response Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"report_id"</span>: <span class="json-string">"b6680d71-4afc-4937-9148-50f9f319f736"</span>,
+  <span class="json-key">"slug"</span>: <span class="json-string">"scoring-by-day"</span>,
+  <span class="json-key">"title"</span>: <span class="json-string">"Скоринг по дням"</span>,
+  <span class="json-key">"type"</span>: <span class="json-string">"bar_chart"</span>,
+  <span class="json-key">"columns"</span>: [
+    { <span class="json-key">"key"</span>: <span class="json-string">"d"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Дата"</span>, <span class="json-key">"type"</span>: <span class="json-string">"date"</span> },
+    { <span class="json-key">"key"</span>: <span class="json-string">"c"</span>, <span class="json-key">"label"</span>: <span class="json-string">"Уникальных клиентов"</span>, <span class="json-key">"type"</span>: <span class="json-string">"number"</span> }
+  ],
+  <span class="json-key">"data"</span>: [
+    { <span class="json-key">"d"</span>: <span class="json-string">"2026-04-01"</span>, <span class="json-key">"c"</span>: <span class="json-number">5</span> },
+    { <span class="json-key">"d"</span>: <span class="json-string">"2026-04-02"</span>, <span class="json-key">"c"</span>: <span class="json-number">9</span> },
+    { <span class="json-key">"d"</span>: <span class="json-string">"2026-04-03"</span>, <span class="json-key">"c"</span>: <span class="json-number">15</span> }
+  ],
+  <span class="json-key">"totals"</span>: <span class="json-null">null</span>,
+  <span class="json-key">"meta"</span>: {
+    <span class="json-key">"generated_at"</span>: <span class="json-string">"2026-04-27T16:14:04.050910+00:00"</span>,
+    <span class="json-key">"execution_time_ms"</span>: <span class="json-number">4</span>,
+    <span class="json-key">"total_rows"</span>: <span class="json-number">10</span>,
+    <span class="json-key">"filters_applied"</span>: { <span class="json-comment">/* ... */</span> },
+    <span class="json-key">"test_mode"</span>: <span class="json-bool">true</span>
+  }
+}</code></pre>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">400</span> Invalid filters</li>
+    <li><span class="error-code error-4xx">404</span> Report not found</li>
+    <li><span class="error-code error-5xx">504</span> SQL execution timeout</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 11 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep11">
+  <div class="endpoint-header">
+    <div class="endpoint-number">11</div>
+    <div class="endpoint-title">List Datasources</div>
+  </div>
+  <p class="endpoint-desc">Get all configured datasources. Password is never returned.</p>
+  <div class="route-block">
+    <span class="method method-get">GET</span>
+    <span class="route-path">/api/v1/admin/datasources</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Response Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"datasources"</span>: [
+    {
+      <span class="json-key">"id"</span>: <span class="json-string">"f76d6370-b34e-4f6c-9dbb-92efd6858ba6"</span>,
+      <span class="json-key">"name"</span>: <span class="json-string">"nasiya-test-db"</span>,
+      <span class="json-key">"host"</span>: <span class="json-string">"db"</span>,
+      <span class="json-key">"port"</span>: <span class="json-number">5432</span>,
+      <span class="json-key">"database"</span>: <span class="json-string">"report_service"</span>,
+      <span class="json-key">"username"</span>: <span class="json-string">"report"</span>,
+      <span class="json-key">"is_active"</span>: <span class="json-bool">true</span>,
+      <span class="json-key">"created_at"</span>: <span class="json-string">"2026-04-27T16:13:10.990830Z"</span>,
+      <span class="json-key">"updated_at"</span>: <span class="json-string">"2026-04-27T16:13:21.486289Z"</span>
+    }
+  ]
+}</code></pre>
+</div>
+
+<!-- ============================== EP 12 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep12">
+  <div class="endpoint-header">
+    <div class="endpoint-number">12</div>
+    <div class="endpoint-title">Create Datasource</div>
+  </div>
+  <p class="endpoint-desc">Add a new external database connection.</p>
+  <div class="route-block">
+    <span class="method method-post">POST</span>
+    <span class="route-path">/api/v1/admin/datasources</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Request Body</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
+    <tr><td><code>name</code></td><td>string</td><td class="required">yes</td><td>Display name (unique)</td></tr>
+    <tr><td><code>host</code></td><td>string</td><td class="required">yes</td><td>Database host</td></tr>
+    <tr><td><code>port</code></td><td>integer</td><td class="optional">no</td><td>Port (default: 5432)</td></tr>
+    <tr><td><code>database</code></td><td>string</td><td class="required">yes</td><td>Database name</td></tr>
+    <tr><td><code>username</code></td><td>string</td><td class="required">yes</td><td>DB username (read-only recommended)</td></tr>
+    <tr><td><code>password</code></td><td>string</td><td class="required">yes</td><td>DB password</td></tr>
+    <tr><td><code>is_active</code></td><td>boolean</td><td class="optional">no</td><td>Default: true</td></tr>
+  </table>
+
+  <div class="section-label">Request Example</div>
+  <pre><span class="label">Request</span><code>{
+  <span class="json-key">"name"</span>: <span class="json-string">"nasiya-core"</span>,
+  <span class="json-key">"host"</span>: <span class="json-string">"10.0.0.5"</span>,
+  <span class="json-key">"port"</span>: <span class="json-number">5432</span>,
+  <span class="json-key">"database"</span>: <span class="json-string">"nasiya"</span>,
+  <span class="json-key">"username"</span>: <span class="json-string">"report_readonly"</span>,
+  <span class="json-key">"password"</span>: <span class="json-string">"secret"</span>
+}</code></pre>
+
+  <div class="section-label">Response: 201 Created</div>
+  <p style="font-size:0.88rem; color: var(--muted); margin-bottom: 16px;">Datasource object without password.</p>
+</div>
+
+<!-- ============================== EP 13 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep13">
+  <div class="endpoint-header">
+    <div class="endpoint-number">13</div>
+    <div class="endpoint-title">Update Datasource</div>
+  </div>
+  <p class="endpoint-desc">Partial update. Password is only sent when changing it. Connection pool is recreated on update.</p>
+  <div class="route-block">
+    <span class="method method-put">PUT</span>
+    <span class="route-path">/api/v1/admin/datasources/{datasource_id}</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Request Example</div>
+  <pre><span class="label">Request</span><code>{
+  <span class="json-key">"name"</span>: <span class="json-string">"nasiya-test-db"</span>
+}</code></pre>
+
+  <div class="section-label">Response: 200 OK</div>
+  <p style="font-size:0.88rem; color: var(--muted); margin-bottom: 16px;">Updated datasource object without password.</p>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">404</span> Datasource not found</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 14 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep14">
+  <div class="endpoint-header">
+    <div class="endpoint-number">14</div>
+    <div class="endpoint-title">Delete Datasource</div>
+  </div>
+  <p class="endpoint-desc">Delete datasource. Blocked if any reports (active or inactive) are linked to it.</p>
+  <div class="route-block">
+    <span class="method method-delete">DELETE</span>
+    <span class="route-path">/api/v1/admin/datasources/{datasource_id}</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Response: 204 No Content</div>
+  <pre><span class="label">Response 204</span><code><span class="json-comment">// Empty body</span></code></pre>
+
+  <div class="section-label">Error Example</div>
+  <pre><span class="label">Response 409</span><code>{
+  <span class="json-key">"detail"</span>: <span class="json-string">"Datasource has linked reports, delete them first"</span>
+}</code></pre>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">404</span> Datasource not found</li>
+    <li><span class="error-code error-4xx">409</span> Has linked reports</li>
+  </ul>
+</div>
+
+<!-- ============================== EP 15 ============================== -->
+<hr class="divider">
+<div class="endpoint" id="ep15">
+  <div class="endpoint-header">
+    <div class="endpoint-number">15</div>
+    <div class="endpoint-title">Test Connection</div>
+  </div>
+  <p class="endpoint-desc">Verify datasource connectivity by executing <code>SELECT 1</code>.</p>
+  <div class="route-block">
+    <span class="method method-post">POST</span>
+    <span class="route-path">/api/v1/admin/datasources/{datasource_id}/test</span>
+    <span class="role-badge">admin</span>
+  </div>
+
+  <div class="section-label">Response (200)</div>
+  <table>
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td><code>status</code></td><td>string</td><td><code>ok</code> or <code>error</code></td></tr>
+    <tr><td><code>response_time_ms</code></td><td>integer</td><td>Connection time in ms</td></tr>
+    <tr><td><code>detail</code></td><td>string?</td><td>Error message (if status is error)</td></tr>
+  </table>
+
+  <div class="section-label">Success Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"status"</span>: <span class="json-string">"ok"</span>,
+  <span class="json-key">"response_time_ms"</span>: <span class="json-number">26</span>,
+  <span class="json-key">"detail"</span>: <span class="json-null">null</span>
+}</code></pre>
+
+  <div class="section-label">Error Example</div>
+  <pre><span class="label">Response 200</span><code>{
+  <span class="json-key">"status"</span>: <span class="json-string">"error"</span>,
+  <span class="json-key">"response_time_ms"</span>: <span class="json-number">3012</span>,
+  <span class="json-key">"detail"</span>: <span class="json-string">"Connection refused"</span>
+}</code></pre>
+
+  <div class="section-label">Errors</div>
+  <ul class="errors-list">
+    <li><span class="error-code error-4xx">404</span> Datasource not found</li>
+  </ul>
+</div>
+
+</body>
+</html>

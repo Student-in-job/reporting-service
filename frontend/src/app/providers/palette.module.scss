@@ -1,0 +1,62 @@
+@use '@/app/styles/settings/palette' as *;
+@use '@/app/styles/settings/radius' as *;
+
+:export {
+  brandPrimary50: $brand-primary-50;
+  brandPrimary100: $brand-primary-100;
+  brandPrimary200: $brand-primary-200;
+  brandPrimary300: $brand-primary-300;
+  brandPrimary400: $brand-primary-400;
+  brandPrimary500: $brand-primary-500;
+  brandPrimary600: $brand-primary-600;
+  brandPrimary700: $brand-primary-700;
+  brandPrimary800: $brand-primary-800;
+  brandPrimary900: $brand-primary-900;
+
+  brandLightblue50: $brand-lightblue-50;
+  brandLightblue300: $brand-lightblue-300;
+  brandLightblue500: $brand-lightblue-500;
+  brandLightblue600: $brand-lightblue-600;
+
+  grey50: $grey-50;
+  grey100: $grey-100;
+  grey200: $grey-200;
+  grey300: $grey-300;
+  grey400: $grey-400;
+  grey500: $grey-500;
+  grey600: $grey-600;
+  grey700: $grey-700;
+  grey800: $grey-800;
+  grey900: $grey-900;
+
+  success50: $success-50;
+  success300: $success-300;
+  success500: $success-500;
+  success700: $success-700;
+  successBgDark: $success-bg-dark;
+
+  error50: $error-50;
+  error300: $error-300;
+  error500: $error-500;
+  error700: $error-700;
+  errorBgDark: $error-bg-dark;
+  danger500: $danger-500;
+
+  warning50: $warning-50;
+  warning300: $warning-300;
+  warning500: $warning-500;
+  warning700: $warning-700;
+  warningBgDark: $warning-bg-dark;
+
+  infoBgDark: $info-bg-dark;
+
+  textPrimary: $text-primary;
+  textSecondary: $text-secondary;
+  textTertiary: $text-tertiary;
+  textWhite: $text-white;
+
+  radiusSm: $radius-sm;
+  radiusMd: $radius-md;
+  radiusLg: $radius-lg;
+  radiusXl: $radius-xl;
+}

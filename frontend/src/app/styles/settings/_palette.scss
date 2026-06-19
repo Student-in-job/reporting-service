@@ -1,0 +1,59 @@
+// Brand
+$brand-primary-50: #eff4ff;
+$brand-primary-100: #dbe7ff;
+$brand-primary-200: #bfd4ff;
+$brand-primary-300: #93b6ff;
+$brand-primary-400: #608dff;
+$brand-primary-500: #2563eb;
+$brand-primary-600: #1d4ed8;
+$brand-primary-700: #1e40af;
+$brand-primary-800: #1e3a8a;
+$brand-primary-900: #172554;
+
+$brand-lightblue-50: #f0f9ff;
+$brand-lightblue-300: #38bdf8;
+$brand-lightblue-500: #0ea5e9;
+$brand-lightblue-600: #0284c7;
+
+// Greys
+$grey-50: #f9fafb;
+$grey-100: #f2f4f7;
+$grey-200: #eaecf0;
+$grey-300: #d0d5dd;
+$grey-400: #98a2b3;
+$grey-500: #667085;
+$grey-600: #475467;
+$grey-700: #344054;
+$grey-800: #1d2939;
+$grey-900: #101828;
+
+// Status — success
+$success-50: #ecfdf3;
+$success-300: #4ade80;
+$success-500: #12b76a;
+$success-700: #027a48;
+
+// Status — error / danger
+$error-50: #fef3f2;
+$error-300: #f87171;
+$error-500: #f04438;
+$error-700: #b42318;
+$danger-500: #d92d20;
+
+// Status — warning
+$warning-50: #fffaeb;
+$warning-300: #fbbf24;
+$warning-500: #f79009;
+$warning-700: #b54708;
+
+// Translucent status backgrounds (для dark-темы — низкоконтрастный фон поверх тёмной поверхности)
+$success-bg-dark: rgba(18, 183, 106, 0.18); // $success-500 @ 18%
+$error-bg-dark: rgba(240, 68, 56, 0.18); // $error-500 @ 18%
+$warning-bg-dark: rgba(247, 144, 9, 0.18); // $warning-500 @ 18%
+$info-bg-dark: rgba(14, 165, 233, 0.18); // $brand-lightblue-500 @ 18%
+
+// Text
+$text-primary: #101828;
+$text-secondary: #475467;
+$text-tertiary: #667085;
+$text-white: #ffffff;

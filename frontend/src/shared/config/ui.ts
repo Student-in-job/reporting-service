@@ -1,0 +1,13 @@
+export const LAYOUT_SIDEBAR_WIDTH = 260
+export const LAYOUT_SIDEBAR_COLLAPSED_WIDTH = 64
+export const LAYOUT_HEADER_HEIGHT = 56
+
+export const MENU_COLLAPSED_ICON_SIZE = 20
+
+export const TABLE_ACTION_ICON_SIZE = 18
+export const TABLE_DEFAULT_PAGE_SIZE = 25
+
+export const REPORTS_GRID_COLS = 3
+export const REPORTS_GRID_GAP = 16
+
+export const CHART_DEFAULT_HEIGHT = 480

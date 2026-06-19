@@ -1,0 +1,120 @@
+@use '../settings/palette' as *;
+
+// Палитра — общая для обеих тем
+:root {
+  // Brand
+  --brand-primary-50: #{$brand-primary-50};
+  --brand-primary-100: #{$brand-primary-100};
+  --brand-primary-200: #{$brand-primary-200};
+  --brand-primary-300: #{$brand-primary-300};
+  --brand-primary-400: #{$brand-primary-400};
+  --brand-primary-500: #{$brand-primary-500};
+  --brand-primary-600: #{$brand-primary-600};
+  --brand-primary-700: #{$brand-primary-700};
+  --brand-primary-800: #{$brand-primary-800};
+  --brand-primary-900: #{$brand-primary-900};
+
+  --brand-lightblue-50: #{$brand-lightblue-50};
+  --brand-lightblue-300: #{$brand-lightblue-300};
+  --brand-lightblue-500: #{$brand-lightblue-500};
+  --brand-lightblue-600: #{$brand-lightblue-600};
+
+  // Greys
+  --grey-50: #{$grey-50};
+  --grey-100: #{$grey-100};
+  --grey-200: #{$grey-200};
+  --grey-300: #{$grey-300};
+  --grey-400: #{$grey-400};
+  --grey-500: #{$grey-500};
+  --grey-600: #{$grey-600};
+  --grey-700: #{$grey-700};
+  --grey-800: #{$grey-800};
+  --grey-900: #{$grey-900};
+
+  // Status
+  --success-50: #{$success-50};
+  --success-300: #{$success-300};
+  --success-500: #{$success-500};
+  --success-700: #{$success-700};
+  --success-bg-dark: #{$success-bg-dark};
+
+  --error-50: #{$error-50};
+  --error-300: #{$error-300};
+  --error-500: #{$error-500};
+  --error-700: #{$error-700};
+  --error-bg-dark: #{$error-bg-dark};
+  --danger-500: #{$danger-500};
+
+  --warning-50: #{$warning-50};
+  --warning-300: #{$warning-300};
+  --warning-500: #{$warning-500};
+  --warning-700: #{$warning-700};
+  --warning-bg-dark: #{$warning-bg-dark};
+
+  --info-bg-dark: #{$info-bg-dark};
+
+  // Text — общие на палитру
+  --text-primary: #{$text-primary};
+  --text-secondary: #{$text-secondary};
+  --text-tertiary: #{$text-tertiary};
+  --text-white: #{$text-white};
+}
+
+// Тема — light (default)
+:root,
+[data-theme='light'] {
+  --bg-body: #{$grey-50};
+  --bg-card: #ffffff;
+  --bg-action: #{$grey-100};
+
+  --text-base: #{$grey-900};
+  --text-1: #{$grey-900};
+  --text-2: #{$grey-600};
+  --text-3: #{$grey-500};
+
+  --border: #{$grey-200};
+  --divider: #{$grey-100};
+
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04);
+
+  // Tag
+  --tag-default-bg: #{$grey-200};
+  --tag-default-text: #{$grey-700};
+  --tag-success-bg: #{$success-50};
+  --tag-success-text: #{$success-700};
+  --tag-error-bg: #{$error-50};
+  --tag-error-text: #{$error-700};
+  --tag-warning-bg: #{$warning-50};
+  --tag-warning-text: #{$warning-700};
+  --tag-info-bg: #{$brand-lightblue-50};
+  --tag-info-text: #{$brand-lightblue-600};
+}
+
+// Тема — dark (palette aligned with Naive UI darkTheme)
+[data-theme='dark'] {
+  --bg-body: #101014;
+  --bg-card: #18181c;
+  --bg-action: #1f1f24;
+
+  --text-base: rgba(255, 255, 255, 0.82);
+  --text-1: rgba(255, 255, 255, 0.9);
+  --text-2: rgba(255, 255, 255, 0.7);
+  --text-3: rgba(255, 255, 255, 0.52);
+
+  --border: #2c2c33;
+  --divider: #2c2c33;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4);
+
+  // Tag (default — такой же светлый, как в light)
+  --tag-default-bg: #{$grey-200};
+  --tag-default-text: #{$grey-700};
+  --tag-success-bg: #{$success-bg-dark};
+  --tag-success-text: #{$success-300};
+  --tag-error-bg: #{$error-bg-dark};
+  --tag-error-text: #{$error-300};
+  --tag-warning-bg: #{$warning-bg-dark};
+  --tag-warning-text: #{$warning-300};
+  --tag-info-bg: #{$info-bg-dark};
+  --tag-info-text: #{$brand-lightblue-300};
+}

@@ -1,0 +1,43 @@
+// Brand
+$color-primary: var(--brand-primary-500);
+$color-primary-hover: var(--brand-primary-500);
+$color-primary-pressed: var(--brand-primary-600);
+
+// Status
+$color-success: var(--success-500);
+$color-warning: var(--warning-500);
+$color-error: var(--error-500);
+$color-info: var(--brand-lightblue-600);
+
+// Text — управляются темой
+$color-text-base: var(--text-base);
+$color-text-1: var(--text-1);
+$color-text-2: var(--text-2);
+$color-text-3: var(--text-3);
+
+// Surfaces — управляются темой
+$color-bg-body: var(--bg-body);
+$color-bg-card: var(--bg-card);
+$color-bg-action: var(--bg-action);
+
+// Borders / dividers — управляются темой
+$color-border: var(--border);
+$color-divider: var(--divider);
+
+// Tag — управляются темой
+$color-tag-default-bg: var(--tag-default-bg);
+$color-tag-default-text: var(--tag-default-text);
+$color-tag-success-bg: var(--tag-success-bg);
+$color-tag-success-text: var(--tag-success-text);
+$color-tag-error-bg: var(--tag-error-bg);
+$color-tag-error-text: var(--tag-error-text);
+$color-tag-warning-bg: var(--tag-warning-bg);
+$color-tag-warning-text: var(--tag-warning-text);
+$color-tag-info-bg: var(--tag-info-bg);
+$color-tag-info-text: var(--tag-info-text);
+
+// Inverted (sider — независим от темы, всегда тёмный)
+$color-inverted-bg: #0f172a;
+$color-inverted-text: rgba(255, 255, 255, 0.92);
+$color-inverted-text-muted: rgba(255, 255, 255, 0.6);
+$color-inverted-divider: rgba(255, 255, 255, 0.06);

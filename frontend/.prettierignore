@@ -1,0 +1,6 @@
+dist
+node_modules
+yarn.lock
+src/auto-imports.d.ts
+src/components.d.ts
+.eslintrc-auto-import.json

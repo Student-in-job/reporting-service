@@ -1,0 +1,63 @@
+@use '../settings' as *;
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-align-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, $color-text-base, transparent 85%);
+    border-radius: $radius-sm;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@mixin respond-to($bp) {
+  @if $bp == sm {
+    @media (max-width: $bp-sm) {
+      @content;
+    }
+  } @else if $bp == md {
+    @media (max-width: $bp-md) {
+      @content;
+    }
+  } @else if $bp == lg {
+    @media (max-width: $bp-lg) {
+      @content;
+    }
+  } @else if $bp == xl {
+    @media (max-width: $bp-xl) {
+      @content;
+    }
+  }
+}
