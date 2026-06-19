@@ -4,7 +4,7 @@ A web analytics/reporting service: an admin defines reports (SQL queries against
 configured data sources) and end users run them with filters, viewing the
 results as tables or charts and exporting them to Excel.
 
-The repository contains two applications plus a set of PowerShell scripts that
+The repository contains two applications plus a set of build scripts that
 assemble a self-contained, runnable bundle in the `publish/` folder.
 
 ---
@@ -72,7 +72,7 @@ the static folder is mounted at `/static` and `/` returns the SPA's `index.html`
 ├─ frontend/      Vue 3 + Vite SPA
 ├─ backend/       FastAPI service (app/, alembic/, ...)
 ├─ docker/        docker-compose.yml (runs both apps)
-├─ scripts/       PowerShell build/publish scripts (see below)
+├─ scripts/       Build/publish scripts + DB export utility (see below)
 ├─ publish/       Generated runnable bundle (frontend build + backend + venv)
 └─ docs/
 ```
@@ -99,31 +99,42 @@ the static folder is mounted at `/static` and `/` returns the SPA's `index.html`
 
 ## Build & publish scripts (`scripts/`)
 
-All scripts are written for PowerShell 5.1+, resolve paths relative to the
-project root (so they can be run from any directory), and assemble the
-`publish/` folder. Run them from the repo root:
+Every script is available in two formats — `.ps1` (PowerShell 5.1+) and `.bat`
+(CMD) — with identical behavior. All scripts resolve paths relative to the
+project root, so they can be run from any working directory.
 
 | Script | What it does |
 |---|---|
-| `install-environment.ps1` | Creates a Python virtual environment at `publish/venv` and installs the backend dependencies from `backend/requirements.txt`. |
-| `build-frontend.ps1` | Builds the SPA in a Node 22 Docker container (`vite build --base=/static/`) and writes the static output to `publish/static`. |
-| `build-backend.ps1` | Copies the backend (`app/`, `alembic/`, `alembic.ini`, `requirements.txt`, `entrypoint.sh`, `.env`) into `publish/`. Merges `backend/static` into `publish/static` (the backend's `index.html` is copied as `api-reference.html` so it doesn't overwrite the SPA). Rewrites the published `.env`'s `DATABASE_URL` host to `localhost` for local runs. |
-| `build-clean.ps1` | Removes everything from `publish/` **except** `publish/venv` (the slow-to-recreate environment), for a fresh publish. |
+| `install-environment` | Creates a Python virtual environment at `publish/venv` and installs the backend dependencies from `backend/requirements.txt`. Pass `-Recreate` (PS) or `recreate` (CMD) to rebuild from scratch. |
+| `build-frontend` | Builds the SPA in a Node 22 Docker container (`vite build --base=/static/`) and writes the static output to `publish/static`. |
+| `build-backend` | Copies the backend (`app/`, `alembic/`, `alembic.ini`, `requirements.txt`, `entrypoint.sh`, `.env`) into `publish/`. Merges `backend/static` into `publish/static` (the backend's `index.html` is copied as `api-reference.html` so it doesn't overwrite the SPA). Rewrites the published `.env`'s `DATABASE_URL` host to `localhost` for local runs. |
+| `build-clean` | Removes everything from `publish/` **except** `publish/venv` (the slow-to-recreate environment), for a fresh publish. |
+| `export.py` | Exports all configuration data (datasources, users, reports) from the `report_service` database to `export.dat` as SQL (TRUNCATE + INSERT in FK-safe order). Re-import with `psql -d report_service -f export.dat`. |
 
 ### Recommended sequence
 
 First-time setup (or whenever `requirements.txt` changes):
 
 ```powershell
+# PowerShell
 .\scripts\install-environment.ps1
+
+# CMD
+scripts\install-environment.bat
 ```
 
 Then, to produce / refresh the bundle:
 
 ```powershell
+# PowerShell
 .\scripts\build-clean.ps1       # optional: wipe publish (keeps venv)
 .\scripts\build-frontend.ps1    # SPA -> publish/static
 .\scripts\build-backend.ps1     # backend -> publish/ (+ .env to localhost)
+
+# CMD
+scripts\build-clean.bat
+scripts\build-frontend.bat
+scripts\build-backend.bat
 ```
 
 After this, `publish/` contains:
@@ -137,8 +148,25 @@ publish/
 
 Useful overrides:
 
-- `build-frontend.ps1 -Base '/'` — build for serving at the site root instead of `/static/`.
-- `build-backend.ps1 -DatabaseUrl '<full url>'` — set an explicit `DATABASE_URL` in the published `.env`.
+- `build-frontend.ps1 -Base '/'` or `build-frontend.bat /` — build for serving at the site root instead of `/static/`.
+- `build-backend.ps1 -DatabaseUrl '<full url>'` or `build-backend.bat "<full url>"` — set an explicit `DATABASE_URL` in the published `.env`.
+
+### Database export / import
+
+Export the current configuration data to SQL:
+
+```powershell
+# From repo root, with publish venv active (or any env with asyncpg)
+python scripts/export.py                        # reads DATABASE_URL from publish/.env or backend/.env
+python scripts/export.py --url "postgresql://report:report@localhost:5432/report_service"
+python scripts/export.py --out path/to/out.dat  # custom output path
+```
+
+Re-import on another machine:
+
+```bash
+psql -d report_service -f export.dat
+```
 
 ---
 
@@ -149,7 +177,8 @@ Make sure PostgreSQL is running with the role/database from
 
 ```powershell
 cd publish
-.\venv\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1          # PowerShell
+# or: venv\Scripts\activate.bat      # CMD
 
 # Apply database migrations (first run / after schema changes)
 alembic upgrade head

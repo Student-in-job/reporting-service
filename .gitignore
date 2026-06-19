@@ -122,3 +122,5 @@ dmypy.json
 publish/
 
 .git.untracked/
+backend/.git/
+frontend/.git/

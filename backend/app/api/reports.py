@@ -40,6 +40,7 @@ async def list_reports(
                 name=r.name,
                 description=r.description,
                 group=r.group,
+                type=r.type,
                 filters=config.get("filters", []),
             )
         )
