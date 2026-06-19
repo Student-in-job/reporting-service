@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: ../backend
+    env_file:
+      - ../backend/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ../frontend
+    env_file:
+      - ../frontend/.env
+    environment:
+      NGINX_ENVSUBST_FILTER: "^BACKEND_"
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
