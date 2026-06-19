@@ -120,3 +120,5 @@ dmypy.json
 .idea
 
 publish/
+
+.git.untracked/
