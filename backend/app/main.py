@@ -4,7 +4,7 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.exceptions import StarletteHTTPException
 
 from app.api.auth import router as auth_router
@@ -58,4 +58,8 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 async def spa_fallback(request: Request, exc: StarletteHTTPException):
     if exc.status_code == 404 and not request.url.path.startswith("/api/"):
         return FileResponse(STATIC_DIR / "index.html")
-    raise exc
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+        headers=getattr(exc, "headers", None),
+    )

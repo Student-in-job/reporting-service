@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, nextTick } from 'vue'
 import { createPinia } from 'pinia'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import '@fontsource-variable/inter/index.css'
@@ -28,14 +28,24 @@ const queryClient = new QueryClient({
 
 app.use(VueQueryPlugin, { queryClient })
 
-setUnauthorizedHandler(() => {
+let redirecting = false
+
+setUnauthorizedHandler(async () => {
   const session = useSessionStore()
   session.logout()
-  if (router.currentRoute.value.name === RouteNames.LOGIN) return
-  router.replace({
-    name: RouteNames.LOGIN,
-    query: { redirect: router.currentRoute.value.fullPath },
-  })
+
+  if (redirecting || router.currentRoute.value.name === RouteNames.LOGIN) return
+  redirecting = true
+
+  await nextTick()
+  try {
+    await router.replace({
+      name: RouteNames.LOGIN,
+      query: { redirect: router.currentRoute.value.fullPath },
+    })
+  } finally {
+    redirecting = false
+  }
 })
 
 app.mount('#app')
