@@ -8,12 +8,14 @@
 #
 # Steps:
 #   1. Verifies Docker is running.
-#   2. Builds the frontend "build-stage" Docker image (runs `vite build` inside
-#      node:22) with the public base path set to /static/ so the assets resolve
-#      correctly when the FastAPI backend serves the SPA under /static.
-#   3. Extracts the compiled static site (index.html + hashed css/js + assets)
-#      from the image into the ./publish/static folder.
-#   4. Cleans up the temporary extract container.
+#   2. Builds the frontend "build-stage" Docker image (yarn install + vite build
+#      inside node:22). The Dockerfile is intentionally left unchanged so it can
+#      be reused as-is by CI/CD (which serves the SPA at root).
+#   3. Re-runs `vite build --base /static/` inside that image and extracts the
+#      compiled static site (index.html + hashed css/js + assets) into the
+#      ./publish/static folder, so the assets resolve when the FastAPI backend
+#      serves the SPA under /static.
+#   4. Cleans up the temporary build/extract container.
 #
 # This script lives in <project-root>/scripts and resolves all paths relative
 # to the project root, so it can be run from any working directory.
@@ -58,17 +60,20 @@ Write-Host '==> Checking Docker...' -ForegroundColor Cyan
 docker version --format '{{.Server.Version}}' | Out-Null
 Assert-LastExit 'Docker is not available. Start Docker Desktop and try again.'
 
-Write-Host "==> Building frontend image (vite build inside node:22, base '$Base')..." -ForegroundColor Cyan
-docker build --build-arg "VITE_BASE=$Base" --target build-stage -t $Tag $frontendDir
+Write-Host '==> Building frontend image (yarn install + vite build inside node:22)...' -ForegroundColor Cyan
+docker build --target build-stage -t $Tag $frontendDir
 Assert-LastExit 'Frontend build failed.'
 
 # Remove any leftover extract container from a previous interrupted run.
 $leftover = docker ps -aq --filter "name=^$extractContainer$"
 if ($leftover) { docker rm -f $extractContainer | Out-Null }
 
-Write-Host '==> Extracting build output...' -ForegroundColor Cyan
-docker create --name $extractContainer $Tag | Out-Null
-Assert-LastExit 'Could not create extract container.'
+# Re-run the Vite build inside the image with the publish base path so the
+# generated assets resolve when the backend serves the SPA under $Base. Done
+# here (not in the Dockerfile) so the Dockerfile stays unchanged for CI/CD.
+Write-Host "==> Building SPA with base '$Base'..." -ForegroundColor Cyan
+docker run --name $extractContainer $Tag yarn vite build --base $Base
+Assert-LastExit 'Frontend build (base override) failed.'
 
 try {
     if (Test-Path -LiteralPath $OutputDir) {

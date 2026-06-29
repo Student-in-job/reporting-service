@@ -9,11 +9,13 @@ REM local Node.js install is required.
 REM
 REM Steps:
 REM   1. Verifies Docker is running.
-REM   2. Builds the frontend "build-stage" Docker image (runs vite build inside
-REM      node:22) with the public base path set to /static/ so the assets
-REM      resolve when the FastAPI backend serves the SPA under /static.
-REM   3. Extracts the compiled static site from the image into .\publish\static.
-REM   4. Cleans up the temporary extract container.
+REM   2. Builds the frontend "build-stage" Docker image (yarn install + vite
+REM      build inside node:22). The Dockerfile is intentionally left unchanged
+REM      so it can be reused as-is by CI/CD (which serves the SPA at root).
+REM   3. Re-runs vite build --base /static/ inside that image and extracts the
+REM      compiled static site into .\publish\static, so the assets resolve when
+REM      the FastAPI backend serves the SPA under /static.
+REM   4. Cleans up the temporary build/extract container.
 REM
 REM This script lives in <project-root>\scripts and resolves all paths relative
 REM to the project root, so it can be run from any working directory.
@@ -35,16 +37,19 @@ echo ==^> Checking Docker...
 docker version --format "{{.Server.Version}}" >nul
 if errorlevel 1 ( echo ERROR: Docker is not available. Start Docker Desktop and try again. & exit /b 1 )
 
-echo ==^> Building frontend image (vite build inside node:22, base '%BASE%')...
-docker build --build-arg "VITE_BASE=%BASE%" --target build-stage -t "%TAG%" "%FRONTEND_DIR%"
+echo ==^> Building frontend image (yarn install + vite build inside node:22)...
+docker build --target build-stage -t "%TAG%" "%FRONTEND_DIR%"
 if errorlevel 1 ( echo ERROR: Frontend build failed. & exit /b 1 )
 
 REM Remove any leftover extract container from a previous interrupted run.
 docker rm -f "%EXTRACT%" >nul 2>&1
 
-echo ==^> Extracting build output...
-docker create --name "%EXTRACT%" "%TAG%" >nul
-if errorlevel 1 ( echo ERROR: Could not create extract container. & exit /b 1 )
+REM Re-run the Vite build with the publish base path so the assets resolve when
+REM the backend serves the SPA under %BASE%. Done here (not in the Dockerfile)
+REM so the Dockerfile stays unchanged for CI/CD.
+echo ==^> Building SPA with base '%BASE%'...
+docker run --name "%EXTRACT%" "%TAG%" yarn vite build --base "%BASE%"
+if errorlevel 1 ( echo ERROR: Frontend build ^(base override^) failed. & docker rm -f "%EXTRACT%" >nul 2>&1 & exit /b 1 )
 
 if exist "%OUTPUT_DIR%" rmdir /s /q "%OUTPUT_DIR%"
 mkdir "%OUTPUT_DIR%"
