@@ -33,7 +33,6 @@ export interface ReportCreateDto {
   type?: ReportType
   datasource_id: string
   sql_query: string
-  columns?: ColumnDef[]
   config?: ReportAdminConfig
 }
 
@@ -45,7 +44,6 @@ export interface ReportUpdateDto {
   type?: ReportType
   datasource_id?: string
   sql_query?: string
-  columns?: ColumnDef[]
   config?: ReportAdminConfig
   is_active?: boolean
 }
