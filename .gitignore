@@ -127,3 +127,5 @@ frontend/.git/
 /backend-company-repo/
 /frontend-company-repo/
 /tmp/
+/backend/DockerFile
+/frontend/DockerFile
