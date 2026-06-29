@@ -15,6 +15,7 @@ cd /d "%~dp0..\frontend-company-repo"
 git checkout main
 git pull origin main
 
+cd /d ".."
 echo.
 echo ========================================
 echo  Done.
