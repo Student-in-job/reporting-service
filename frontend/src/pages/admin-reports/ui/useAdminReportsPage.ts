@@ -185,15 +185,17 @@ export function useAdminReportsPage() {
       form.sql_query = full.sql_query
       form.max_range_days = full.config?.max_range_days ?? null
       form.is_active = full.is_active
+      analyzedColumns.value = full.config?.columns ?? []
     } finally {
       isLoadingEdit.value = false
     }
   }
 
   function buildConfig(): ReportCreateDto['config'] {
-    return form.max_range_days != null
-      ? { max_range_days: form.max_range_days }
-      : undefined
+    const config: NonNullable<ReportCreateDto['config']> = {}
+    if (form.max_range_days != null) config.max_range_days = form.max_range_days
+    if (analyzedColumns.value.length) config.columns = analyzedColumns.value
+    return Object.keys(config).length ? config : undefined
   }
 
   async function onSubmit() {
@@ -213,7 +215,6 @@ export function useAdminReportsPage() {
         type: form.type,
         datasource_id: form.datasource_id,
         sql_query: form.sql_query,
-        columns: analyzedColumns.value.length ? analyzedColumns.value : undefined,
         config: buildConfig(),
       })
     } else if (editingId.value) {
@@ -227,7 +228,6 @@ export function useAdminReportsPage() {
           type: form.type,
           datasource_id: form.datasource_id,
           sql_query: form.sql_query,
-          columns: analyzedColumns.value.length ? analyzedColumns.value : undefined,
           config: buildConfig(),
           is_active: form.is_active,
         },
